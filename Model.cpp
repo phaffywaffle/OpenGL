@@ -117,8 +117,32 @@ static GLushort tempindices[] = {
 	20, 21, 22, 20, 22, 23
 };
 
+struct Vertex {	float x; float y; float z; };
+
 Model::Model()
 {
+	std::vector<Vertex> vertices;
+	std::ifstream is("test.obj");
+	if(is.bad()) {	print("Error opening obj file"); pause(); exit(-1);	}
+
+	std::string line;
+	while(std::getline(is, line))
+	{
+		std::istringstream iss(line);
+		if(line[0] =='v' && line[1] == ' ')
+		{
+			Vertex vertex;
+			char garbage;
+			iss >> garbage >> vertex.x >> vertex.y >> vertex.z;
+			vertices.push_back(vertex);
+		}
+	}
+
+	for(int i = 0; i < vertices.size(); i++)
+	{
+		print("Vertex: (" << vertices.at(i).x << ", " << vertices.at(i).y << ", " << vertices.at(i).z << ")");
+	}
+
 	num_verts = NUM_ARRAY_ELEMENTS(tempverts);
 	verts = new real32[num_verts];
 	for (int i = 0; i < num_verts;)

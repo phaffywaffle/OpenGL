@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
+#include <vector>
 #include <iostream>
 #include <GLM\glm.hpp>
 #include <GLM\gtx\transform.hpp>
@@ -14,6 +16,7 @@
 #define global static
 
 #define print(x) std::cout << x << std::endl
+#define pause() system("PAUSE")
 #define NUM_ARRAY_ELEMENTS(x) sizeof(x) / sizeof(*x)
 
 #define WIDTH 1028
