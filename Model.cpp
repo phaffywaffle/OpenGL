@@ -314,6 +314,9 @@ Model::Model()
 	std::ifstream is("test.obj");
 	if(is.bad()) {	print("Error opening obj file"); pause(); exit(-1);	}
 
+	uint32 numv = 0;
+	uint32 numu = 0;
+	uint32 numn = 0;
 	std::string line;
 	while(std::getline(is, line))
 	{
@@ -324,6 +327,7 @@ Model::Model()
 			char garbage;
 			iss >> garbage >> vertex.x >> vertex.y >> vertex.z;
 			vs.push_back(vertex);
+			numv++;
 		}
 		if(line[0] =='v' && line[1] == 'n')
 		{
@@ -331,6 +335,7 @@ Model::Model()
 			char garbage;
 			iss >> garbage >> normal.x >> normal.y >> normal.z;
 			ns.push_back(normal);
+			numn++;
 		}
 		if(line[0] =='v' && line[1] == 't')
 		{
@@ -338,9 +343,13 @@ Model::Model()
 			char garbage;
 			iss >> garbage >> uv.x >> uv.y;
 			uvss.push_back(uv);
+			numu++;
 		}
 	}
 
+	print("Number of vertices: " << numv);
+	print("Number of uvs: " << numu);
+	print("Number of normals: " << numn);
 	for(int i = 0; i < vs.size(); i++)
 	{
 		print("Vertex: (" << vs.at(i).x << ", " << vs.at(i).y << ", " << vs.at(i).z << ")");
