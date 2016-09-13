@@ -19,4 +19,5 @@ public:
 	~Model();
 	void bind();
 	void unbind();
+	void processLine(std::string);
 };
