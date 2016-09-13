@@ -117,11 +117,15 @@ static GLushort tempindices[] = {
 	20, 21, 22, 20, 22, 23
 };
 
+// Make this a union for vector. Or just use glm::vec3
 struct Vertex {	float x; float y; float z; };
 
 Model::Model()
 {
 	std::vector<Vertex> vertices;
+	std::vector<Vertex> normals;
+	// Remember Vector.z is garbage here
+	std::vector<Vertex> uvs;
 	std::ifstream is("test.obj");
 	if(is.bad()) {	print("Error opening obj file"); pause(); exit(-1);	}
 
@@ -136,11 +140,35 @@ Model::Model()
 			iss >> garbage >> vertex.x >> vertex.y >> vertex.z;
 			vertices.push_back(vertex);
 		}
+		if(line[0] =='v' && line[1] == 'n')
+		{
+			Vertex normal;
+			char garbage;
+			iss >> garbage >> normal.x >> normal.y >> normal.z;
+			normals.push_back(normal);
+		}
+		if(line[0] =='v' && line[1] == 't')
+		{
+			Vertex uv;
+			char garbage;
+			iss >> garbage >> uv.x >> uv.y;
+			uvs.push_back(uv);
+		}
 	}
 
 	for(int i = 0; i < vertices.size(); i++)
 	{
 		print("Vertex: (" << vertices.at(i).x << ", " << vertices.at(i).y << ", " << vertices.at(i).z << ")");
+	}
+
+	for(int i = 0; i < normals.size(); i++)
+	{
+		print("Normal: (" << normals.at(i).x << ", " << normals.at(i).y << ", " << normals.at(i).z << ")");
+	}
+
+	for(int i = 0; i < uvs.size(); i++)
+	{
+		print("UVs: (" << uvs.at(i).x << ", " << uvs.at(i).y << ")");
 	}
 
 	num_verts = NUM_ARRAY_ELEMENTS(tempverts);
