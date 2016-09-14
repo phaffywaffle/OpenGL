@@ -311,8 +311,6 @@ static std::vector<Vertex> ns;
 // Remember Vector.z is garbage here
 static std::vector<Vertex> uvss;
 static std::vector<uint32> isv;
-internal uint32 uvcounter = 0;
-internal uint32 normalcounter = 0;
 void
 Model::processLine(std::string line)
 {
@@ -322,9 +320,9 @@ Model::processLine(std::string line)
 
 	std::istringstream iss(line);
 
-	real32 v1, v2, v3;
-	real32 t1, t2, t3;
-	real32 n1, n2, n3;
+	uint32 v1, v2, v3;
+	uint32 t1, t2, t3;
+	uint32 n1, n2, n3;
 
 	iss >> garbagestring;
 
@@ -335,8 +333,16 @@ Model::processLine(std::string line)
 	iss >> n1;
 
 	isv.push_back(v1);
-	uvs[uvcounter++] = t1;
-	normals[normalcounter++] = n1;
+	print("Putting " << uvss.at(t1 - 1).x << " into uvs[" << (v1 - 1) * FLOATS_PER_UV + 0 << "], replacing " << uvs[(v1 - 1) * FLOATS_PER_UV + 0]);
+	uvs[(v1 - 1) * FLOATS_PER_UV + 0] = uvss.at(t1 - 1).x;
+	print("Putting " << uvss.at(t1 - 1).y << " into uvs[" << (v1 - 1) * FLOATS_PER_UV + 1 << "], replacing " << uvs[(v1 - 1) * FLOATS_PER_UV + 1]);
+	uvs[(v1 - 1) * FLOATS_PER_UV + 1] = uvss.at(t1 - 1).y;
+	print("Putting " << ns.at(n1 - 1).x << " into normals[" << (v1 - 1) * FLOATS_PER_UV + 0 << "], replacing "<< normals[(v1 - 1) * FLOATS_PER_UV + 0]);
+	normals[(v1 - 1) * FLOATS_PER_NORMAL + 0] = ns.at(n1 - 1).x;
+	print("Putting " << ns.at(n1 - 1).y << " into normals[" << (v1 - 1) * FLOATS_PER_UV + 1 << "], replacing "<< normals[(v1 - 1) * FLOATS_PER_UV + 1]);
+	normals[(v1 - 1) * FLOATS_PER_NORMAL + 1] = ns.at(n1 - 1).y;
+	print("Putting " << ns.at(n1 - 1).z << " into normals[" << (v1 - 1) * FLOATS_PER_UV + 2 << "], replacing "<< normals[(v1 - 1) * FLOATS_PER_UV + 2]);
+	normals[(v1 - 1) * FLOATS_PER_NORMAL + 2] = ns.at(n1 - 1).z;
 
 	iss >> v2;
 	iss >> garbagechar;
@@ -345,8 +351,16 @@ Model::processLine(std::string line)
 	iss >> n2;
 
 	isv.push_back(v2);
-	uvs[uvcounter++] = t2;
-	normals[normalcounter++] = n2;
+	print("Putting " << uvss.at(t2 - 1).x << " into uvs[" << (v2 - 1) * FLOATS_PER_UV + 0 << "], replacing" << uvs[(v2 - 1) * FLOATS_PER_UV + 0]);
+	uvs[(v2 - 1) * FLOATS_PER_UV + 0] = uvss.at(t2 - 1).x;
+	print("Putting " << uvss.at(t2 - 1).y << " into uvs[" << (v2 - 1) * FLOATS_PER_UV + 1 << "], replacing " << uvs[(v2 - 1) * FLOATS_PER_UV + 1]);
+	uvs[(v2 - 1) * FLOATS_PER_UV + 1] = uvss.at(t2 - 1).y;
+	print("Putting " << ns.at(n2 - 1).x << " into normals[" << (v2 - 1) * FLOATS_PER_NORMAL + 0 << "], replacing "<< normals[(v2 - 1) * FLOATS_PER_NORMAL + 0]);
+	normals[(v2 - 1) * FLOATS_PER_NORMAL + 0] = ns.at(n2 - 1).x;
+	print("Putting " << ns.at(n2 - 1).y << " into normals[" << (v2 - 1) * FLOATS_PER_NORMAL + 1 << "], replacing "<< normals[(v2 - 1) * FLOATS_PER_NORMAL + 1]);
+	normals[(v2 - 1) * FLOATS_PER_NORMAL + 1] = ns.at(n2 - 1).y;
+	print("Putting " << ns.at(n2 - 1).z << " into normals[" << (v2 - 1) * FLOATS_PER_NORMAL + 2 << "], replacing "<< normals[(v2 - 1) * FLOATS_PER_NORMAL + 2]);
+	normals[(v2 -1) * FLOATS_PER_NORMAL + 2] = ns.at(n2 - 1).z;
 
 	iss >> v3;
 	iss >> garbagechar;
@@ -355,8 +369,18 @@ Model::processLine(std::string line)
 	iss >> n3;
 
 	isv.push_back(v3);
-	uvs[uvcounter++] = t3;
-	normals[normalcounter++] = n3;
+	print("Putting " << uvss.at(t3 - 1).x << " into uvs[" << (v3 - 1) * FLOATS_PER_UV + 0 << "], replacing "<< uvs[(v3 - 1) * FLOATS_PER_UV + 0]);
+	uvs[(v3 - 1) * FLOATS_PER_UV + 0] = uvss.at(t3 - 1).x;
+	print("Putting " << uvss.at(t3 - 1).y << " into uvs[" << (v3 - 1) * FLOATS_PER_UV + 1 << "], replacing " << uvs[(v3 - 1) * FLOATS_PER_UV + 1]);
+	uvs[(v3 - 1) * FLOATS_PER_UV + 1] = uvss.at(t3 - 1).y;
+	print("Putting " << ns.at(n3 - 1).x << " into normals[" << (v3 - 1) * FLOATS_PER_NORMAL + 0 << "], replacing "<< normals[(v3 - 1) * FLOATS_PER_NORMAL + 0]);
+	normals[(v3 - 1) * FLOATS_PER_NORMAL + 0] = ns.at(n3 - 1).x;
+	print("Putting " << ns.at(n3 - 1).y << " into normals[" << (v3 - 1) * FLOATS_PER_NORMAL + 1 << "], replacing "<< normals[(v3 -1 ) * FLOATS_PER_NORMAL + 1]);
+	normals[(v3 - 1) * FLOATS_PER_NORMAL + 1] = ns.at(n3 - 1).y;
+	print("Putting " << ns.at(n3 - 1).z << " into normals[" << (v3 - 1) * FLOATS_PER_NORMAL + 2 << "], replacing "<< normals[(v3 - 1) * FLOATS_PER_NORMAL + 2]);
+	normals[(v3 - 1) * FLOATS_PER_NORMAL + 2] = ns.at(n3 - 1).z;
+
+	num_indices += 3;
 }
 
 Model::Model()
@@ -367,10 +391,7 @@ Model::Model()
 	std::string garbagestring;
 	char garbagechar;
 
-	uint32 numv = 0;
-	uint32 numu = 0;
-	uint32 numn = 0;
-	uint32 numi = 0;
+	num_verts = 0;
 	std::string line;
 	while (std::getline(is, line))
 	{
@@ -380,27 +401,23 @@ Model::Model()
 			Vertex vertex;
 			iss >> garbagestring >> vertex.x >> vertex.y >> vertex.z;
 			vs.push_back(vertex);
-			numv++;
+			num_verts++;
 		}
 		if (line[0] == 'v' && line[1] == 'n')
 		{
 			Vertex normal;
 			iss >> garbagestring >> normal.x >> normal.y >> normal.z;
 			ns.push_back(normal);
-			numn++;
 		}
 		if (line[0] == 'v' && line[1] == 't')
 		{
 			Vertex uv;
 			iss >> garbagestring >> uv.x >> uv.y;
 			uvss.push_back(uv);
-			numu++;
 		}
 		if (line[0] == 'f') break;
 	}
-
-	num_verts = numv;
-	verts = new real32[num_verts];
+	verts = new real32[num_verts * FLOATS_PER_VERTEX];
 	for (int i = 0; i < num_verts; i++)
 	{
 		Vertex v = vs.at(i);
@@ -409,11 +426,11 @@ Model::Model()
 		verts[i * 3 + 2] = v.z;
 	}
 
-	num_uvs = numu;
-	uvs = new real32[num_uvs];
-
-	num_normals = numn;
-	normals = new real32[num_normals];
+	uvs = new real32[num_verts * FLOATS_PER_UV];
+	normals = new real32[num_verts * FLOATS_PER_NORMAL];
+	memset(uvs, 0, num_verts * FLOATS_PER_UV * sizeof(real32));
+	memset(normals, 0, num_verts * FLOATS_PER_NORMAL * sizeof(real32));
+	num_indices = 0;
 
 	processLine(line);
 	while (std::getline(is, line))
@@ -421,17 +438,13 @@ Model::Model()
 		if (line[0] != 'f') continue;
 		
 		processLine(line);
-
-		numi += 3;
 	} 
 
 	for (int i = 0; i < isv.size(); i++)
 		print("index[" << i << "] is: " << isv.at(i));
-	uint32
-		num_indices = NUM_ARRAY_ELEMENTS(tempindices);
 	indices = new GLushort[num_indices];
 	for (int i = 0; i < num_indices;)
-		indices[i] = tempindices[i++];
+		indices[i] = isv.at(i++);
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -442,19 +455,19 @@ Model::Model()
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, num_verts * sizeof(real32), verts, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, num_verts * FLOATS_PER_VERTEX * sizeof(real32), verts, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(real32), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, FLOATS_PER_VERTEX * sizeof(real32), 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, uvbo);
-	glBufferData(GL_ARRAY_BUFFER, num_uvs * sizeof(real32), uvs, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, num_verts * FLOATS_PER_UV * sizeof(real32), uvs, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(real32), 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, FLOATS_PER_UV * sizeof(real32), 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, nbo);
-	glBufferData(GL_ARRAY_BUFFER, num_normals * sizeof(real32), normals, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, num_verts * FLOATS_PER_NORMAL * sizeof(real32), normals, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(real32), 0);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, FLOATS_PER_NORMAL * sizeof(real32), 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GLushort), indices, GL_STATIC_DRAW);//

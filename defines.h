@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <memory.h>
 #include <iostream>
 #include <GLM\glm.hpp>
 #include <GLM\gtx\transform.hpp>
@@ -34,6 +35,10 @@
 
 #define GLSL_TRUE 1.0f
 #define GLSL_FALSE -1.0f
+
+#define FLOATS_PER_VERTEX 3
+#define FLOATS_PER_UV 2
+#define FLOATS_PER_NORMAL 3
 
 typedef int8_t int8;
 typedef int16_t int16;
