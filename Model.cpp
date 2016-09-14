@@ -1,395 +1,47 @@
 #include "Model.h"
 
-//#define USE_ONE_BUFFER
-
-#ifdef	USE_ONE_BUFFER 
-static real32 tempverts[] = {
-	-1, -1, 1, //0
-	1, 0, 0,
-	0, 0, 1,
-
-	1, 1, 1, //1
-	0, 1, 0,
-	0, 0, 1,
-
-	-1, 1, 1, //2
-	0, 0, 1,
-	0, 0, 1,
-
-	1, -1, 1, //3
-	1, 0, 1,
-	0, 0, 1,
-
-	/************/
-
-	-1, -1, -1, //4
-	0, 1, 0,
-	0, 0, -1,
-
-	-1, 1, -1, //5
-	1, 0, 1,
-	0, 0, -1,
-
-	1, 1, -1, //6
-	1, 0, 0,
-	0, 0, -1,
-
-	1, -1, -1, //7
-	0, 0, 1,
-	0, 0, -1,
-
-	/************/
-
-	1, -1, 1, //8
-	1, 0, 1,
-	1, 0, 0,
-
-	1, 1, -1, //9
-	1, 0, 0,
-	1, 0, 0,
-
-	1, 1, 1, //10
-	0, 1, 0,
-	1, 0, 0,
-
-	1, -1, -1, //11
-	0, 0, 1,
-	1, 0, 0,
-
-	/************/
-
-	-1, -1, 1, //12
-	1, 0, 0,
-	-1, 0, 0,
-
-	-1, 1, 1, //13
-	0, 0, 1,
-	-1, 0, 0,
-
-	-1, 1, -1, //14
-	1, 0, 1,
-	-1, 0, 0,
-
-	-1, -1, -1, //15
-	0, 1, 0,
-	-1, 0, 0,
-
-	/************/
-
-	-1, 1, 1, //16
-	0, 0, 1,
-	0, 1, 0,
-
-	1, 1, -1, //17
-	1, 0, 0,
-	0, 1, 0,
-
-	-1, 1, -1, //18
-	1, 0, 1,
-	0, 1, 0,
-
-	1, 1, 1, //19
-	0, 1, 0,
-	0, 1, 0,
-
-	/************/
-
-	-1, -1, 1, //20
-	1, 0, 0,
-	0, -1, 0,
-
-	-1, -1, -1, //21
-	0, 1, 0,
-	0, -1, 0,
-
-	1, -1, -1, //22
-	0, 0, 1,
-	0, -1, 0,
-
-	1, -1, 1, //23
-	1, 0, 1,
-	0, -1, 0
-};
-#else
-static real32 tempverts[] = {
-	-1, -1, 1, //0
-
-	1, 1, 1, //1
-
-	-1, 1, 1, //2
-
-	1, -1, 1, //3
-
-	/************/
-
-	-1, -1, -1, //4
-
-	-1, 1, -1, //5
-
-	1, 1, -1, //6
-
-	1, -1, -1, //7
-
-	/************/
-
-	1, -1, 1, //8
-
-	1, 1, -1, //9
-
-	1, 1, 1, //10
-
-	1, -1, -1, //11
-
-	/************/
-
-	-1, -1, 1, //12
-
-	-1, 1, 1, //13
-
-	-1, 1, -1, //14
-
-	-1, -1, -1, //15
-
-	/************/
-
-	-1, 1, 1, //16
-
-	1, 1, -1, //17
-
-	-1, 1, -1, //18
-
-	1, 1, 1, //19
-
-	/************/
-
-	-1, -1, 1, //20
-
-	-1, -1, -1, //21
-
-	1, -1, -1, //22
-
-	1, -1, 1 //23
-};
-#endif
-
-static real32 tempcolors[] = {
-	1, 0, 0,
-
-	0, 1, 0,
-
-	0, 0, 1,
-
-	1, 0, 1,
-
-	/************/
-
-	0, 1, 0,
-
-	1, 0, 1,
-
-	1, 0, 0,
-
-	0, 0, 1,
-
-	/************/
-
-	1, 0, 1,
-
-	1, 0, 0,
-
-	0, 1, 0,
-
-	0, 0, 1,
-
-	/************/
-
-	1, 0, 0,
-
-	0, 0, 1,
-
-	1, 0, 1,
-
-	0, 1, 0,
-
-	/************/
-
-	0, 0, 1,
-
-	1, 0, 0,
-
-	1, 0, 1,
-
-	0, 1, 0,
-
-	/************/
-
-	1, 0, 0,
-
-	0, 1, 0,
-
-	0, 0, 1,
-
-	1, 0, 1
-};
-
-static real32 tempnormals[] =
-{
-	0, 0, 1,
-
-	0, 0, 1,
-
-	0, 0, 1,
-
-	0, 0, 1,
-
-	/************/
-
-	0, 0, -1,
-
-	0, 0, -1,
-
-	0, 0, -1,
-
-	0, 0, -1,
-
-	/************/
-
-	1, 0, 0,
-
-	1, 0, 0,
-
-	1, 0, 0,
-
-	1, 0, 0,
-
-	/************/
-
-	-1, 0, 0,
-
-	-1, 0, 0,
-
-	-1, 0, 0,
-
-	-1, 0, 0,
-
-	/************/
-
-	0, 1, 0,
-
-	0, 1, 0,
-
-	0, 1, 0,
-
-	0, 1, 0,
-
-	/************/
-
-	0, -1, 0,
-
-	0, -1, 0,
-
-	0, -1, 0,
-
-	0, -1, 0
-};
-
-static GLushort tempindices[] = {
-	0, 1, 2, 0, 3, 1,
-	4, 5, 6, 4, 6, 7,
-	8, 9, 10, 8, 11, 9,
-	12, 13, 14, 12, 14, 15,
-	16, 17, 18, 16, 19, 17,
-	20, 21, 22, 20, 22, 23
-};
-
 // Make this a union for vector. Or just use glm::vec3
-struct Vertex { real32 x; real32 y; real32 z; };
+struct Vertex {	real32 x; real32 y; real32 z; };
 
-// 6fix this later
-static std::vector<Vertex> vs;
-static std::vector<Vertex> ns;
+// fix this later
+internal std::vector<Vertex> vertices_vector;
+internal std::vector<Vertex> normals_vector;
 // Remember Vector.z is garbage here
-static std::vector<Vertex> uvss;
-static std::vector<uint32> isv;
-void
-Model::processLine(std::string line)
-{
-	// fix this later
-	std::string garbagestring;
-	char garbagechar;
+internal std::vector<Vertex> uv_vector;
+internal std::vector<uint32> indices_vector;
+internal std::vector<Vertex> faces_vector;
+internal std::string garbagestring;
+internal char garbagechar;
 
+// Fucked for uvs
+internal bool
+checkEqual(Vertex v1, Vertex v2)
+{
+	return(v1.x == v2.x && v1.y == v2.y && v1.z == v2.z);
+}
+
+internal void
+processFace(std::string line)
+{
 	std::istringstream iss(line);
 
-	uint32 v1, v2, v3;
-	uint32 t1, t2, t3;
-	uint32 n1, n2, n3;
+	uint32 numbers[3 * 3];
 
-	iss >> garbagestring;
+	iss >> garbagechar >> numbers[0] >> garbagechar >> numbers[1] >> garbagechar >> numbers[2] >> numbers[3] >> garbagechar >> numbers[4] >> garbagechar >> numbers[5] >> numbers[6] >> garbagechar >> numbers[7] >> garbagechar >> numbers[8];
 
-	iss >> v1;
-	iss >> garbagechar;
-	iss >> t1;
-	iss >> garbagechar;
-	iss >> n1;
+	Vertex v1 = {numbers[0], numbers[1], numbers[2]};
+	Vertex v2 = {numbers[3], numbers[4], numbers[5]};
+	Vertex v3 = {numbers[6], numbers[7], numbers[8]};
 
-	isv.push_back(v1);
-	print("Putting " << uvss.at(t1 - 1).x << " into uvs[" << (v1 - 1) * FLOATS_PER_UV + 0 << "], replacing " << uvs[(v1 - 1) * FLOATS_PER_UV + 0]);
-	uvs[(v1 - 1) * FLOATS_PER_UV + 0] = uvss.at(t1 - 1).x;
-	print("Putting " << uvss.at(t1 - 1).y << " into uvs[" << (v1 - 1) * FLOATS_PER_UV + 1 << "], replacing " << uvs[(v1 - 1) * FLOATS_PER_UV + 1]);
-	uvs[(v1 - 1) * FLOATS_PER_UV + 1] = uvss.at(t1 - 1).y;
-	print("Putting " << ns.at(n1 - 1).x << " into normals[" << (v1 - 1) * FLOATS_PER_UV + 0 << "], replacing "<< normals[(v1 - 1) * FLOATS_PER_UV + 0]);
-	normals[(v1 - 1) * FLOATS_PER_NORMAL + 0] = ns.at(n1 - 1).x;
-	print("Putting " << ns.at(n1 - 1).y << " into normals[" << (v1 - 1) * FLOATS_PER_UV + 1 << "], replacing "<< normals[(v1 - 1) * FLOATS_PER_UV + 1]);
-	normals[(v1 - 1) * FLOATS_PER_NORMAL + 1] = ns.at(n1 - 1).y;
-	print("Putting " << ns.at(n1 - 1).z << " into normals[" << (v1 - 1) * FLOATS_PER_UV + 2 << "], replacing "<< normals[(v1 - 1) * FLOATS_PER_UV + 2]);
-	normals[(v1 - 1) * FLOATS_PER_NORMAL + 2] = ns.at(n1 - 1).z;
-
-	iss >> v2;
-	iss >> garbagechar;
-	iss >> t2;
-	iss >> garbagechar;
-	iss >> n2;
-
-	isv.push_back(v2);
-	print("Putting " << uvss.at(t2 - 1).x << " into uvs[" << (v2 - 1) * FLOATS_PER_UV + 0 << "], replacing" << uvs[(v2 - 1) * FLOATS_PER_UV + 0]);
-	uvs[(v2 - 1) * FLOATS_PER_UV + 0] = uvss.at(t2 - 1).x;
-	print("Putting " << uvss.at(t2 - 1).y << " into uvs[" << (v2 - 1) * FLOATS_PER_UV + 1 << "], replacing " << uvs[(v2 - 1) * FLOATS_PER_UV + 1]);
-	uvs[(v2 - 1) * FLOATS_PER_UV + 1] = uvss.at(t2 - 1).y;
-	print("Putting " << ns.at(n2 - 1).x << " into normals[" << (v2 - 1) * FLOATS_PER_NORMAL + 0 << "], replacing "<< normals[(v2 - 1) * FLOATS_PER_NORMAL + 0]);
-	normals[(v2 - 1) * FLOATS_PER_NORMAL + 0] = ns.at(n2 - 1).x;
-	print("Putting " << ns.at(n2 - 1).y << " into normals[" << (v2 - 1) * FLOATS_PER_NORMAL + 1 << "], replacing "<< normals[(v2 - 1) * FLOATS_PER_NORMAL + 1]);
-	normals[(v2 - 1) * FLOATS_PER_NORMAL + 1] = ns.at(n2 - 1).y;
-	print("Putting " << ns.at(n2 - 1).z << " into normals[" << (v2 - 1) * FLOATS_PER_NORMAL + 2 << "], replacing "<< normals[(v2 - 1) * FLOATS_PER_NORMAL + 2]);
-	normals[(v2 -1) * FLOATS_PER_NORMAL + 2] = ns.at(n2 - 1).z;
-
-	iss >> v3;
-	iss >> garbagechar;
-	iss >> t3;
-	iss >> garbagechar;
-	iss >> n3;
-
-	isv.push_back(v3);
-	print("Putting " << uvss.at(t3 - 1).x << " into uvs[" << (v3 - 1) * FLOATS_PER_UV + 0 << "], replacing "<< uvs[(v3 - 1) * FLOATS_PER_UV + 0]);
-	uvs[(v3 - 1) * FLOATS_PER_UV + 0] = uvss.at(t3 - 1).x;
-	print("Putting " << uvss.at(t3 - 1).y << " into uvs[" << (v3 - 1) * FLOATS_PER_UV + 1 << "], replacing " << uvs[(v3 - 1) * FLOATS_PER_UV + 1]);
-	uvs[(v3 - 1) * FLOATS_PER_UV + 1] = uvss.at(t3 - 1).y;
-	print("Putting " << ns.at(n3 - 1).x << " into normals[" << (v3 - 1) * FLOATS_PER_NORMAL + 0 << "], replacing "<< normals[(v3 - 1) * FLOATS_PER_NORMAL + 0]);
-	normals[(v3 - 1) * FLOATS_PER_NORMAL + 0] = ns.at(n3 - 1).x;
-	print("Putting " << ns.at(n3 - 1).y << " into normals[" << (v3 - 1) * FLOATS_PER_NORMAL + 1 << "], replacing "<< normals[(v3 -1 ) * FLOATS_PER_NORMAL + 1]);
-	normals[(v3 - 1) * FLOATS_PER_NORMAL + 1] = ns.at(n3 - 1).y;
-	print("Putting " << ns.at(n3 - 1).z << " into normals[" << (v3 - 1) * FLOATS_PER_NORMAL + 2 << "], replacing "<< normals[(v3 - 1) * FLOATS_PER_NORMAL + 2]);
-	normals[(v3 - 1) * FLOATS_PER_NORMAL + 2] = ns.at(n3 - 1).z;
-
-	num_indices += 3;
+	faces_vector.push_back(v1);
+	faces_vector.push_back(v2);
+	faces_vector.push_back(v3);
 }
 
 Model::Model()
 {
 	std::ifstream is("cube.obj");
 	if (is.bad()) { print("Error opening obj file"); pause(); exit(-1); }
-
-	std::string garbagestring;
-	char garbagechar;
 
 	num_verts = 0;
 	std::string line;
@@ -400,51 +52,33 @@ Model::Model()
 		{
 			Vertex vertex;
 			iss >> garbagestring >> vertex.x >> vertex.y >> vertex.z;
-			vs.push_back(vertex);
+			vertices_vector.push_back(vertex);
 			num_verts++;
 		}
 		if (line[0] == 'v' && line[1] == 'n')
 		{
 			Vertex normal;
 			iss >> garbagestring >> normal.x >> normal.y >> normal.z;
-			ns.push_back(normal);
+			normals_vector.push_back(normal);
 		}
 		if (line[0] == 'v' && line[1] == 't')
 		{
 			Vertex uv;
 			iss >> garbagestring >> uv.x >> uv.y;
-			uvss.push_back(uv);
+			uv_vector.push_back(uv);
 		}
-		if (line[0] == 'f') break;
-	}
-	verts = new real32[num_verts * FLOATS_PER_VERTEX];
-	for (int i = 0; i < num_verts; i++)
-	{
-		Vertex v = vs.at(i);
-		verts[i * 3] = v.x;
-		verts[i * 3 + 1] = v.y;
-		verts[i * 3 + 2] = v.z;
+		if (line[0] == 'f')
+		{
+			processFace(line);
+		}
 	}
 
-	uvs = new real32[num_verts * FLOATS_PER_UV];
-	normals = new real32[num_verts * FLOATS_PER_NORMAL];
-	memset(uvs, 0, num_verts * FLOATS_PER_UV * sizeof(real32));
-	memset(normals, 0, num_verts * FLOATS_PER_NORMAL * sizeof(real32));
-	num_indices = 0;
-
-	processLine(line);
-	while (std::getline(is, line))
+	for(int i = 0; i < faces_vector.size(); i++)
 	{
-		if (line[0] != 'f') continue;
-		
-		processLine(line);
-	} 
+		print("Face: " << faces_vector.at(i).x << "/" << faces_vector.at(i).y << "/" << faces_vector.at(i).z);	
+	}
 
-	for (int i = 0; i < isv.size(); i++)
-		print("index[" << i << "] is: " << isv.at(i));
-	indices = new GLushort[num_indices];
-	for (int i = 0; i < num_indices;)
-		indices[i] = isv.at(i++);
+
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
