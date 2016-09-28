@@ -1,0 +1,53 @@
+#version 330 core
+
+in vec3 _position;
+in vec2 _uv;
+in vec3 _normal;
+
+const vec3 attVals = vec3(1.0f, 0.1f, 0.01f);
+
+uniform float ambientLightFactor;
+
+uniform vec3 lightPosition;
+uniform vec3 eyePosition;
+
+out vec4 color;
+
+void main()
+{
+	vec4 c = vec4(1, 1, 1, 1);
+	vec3 normal = normalize(_normal);
+	vec3 lightVector = lightPosition - _position;
+	float distance = length(lightVector);
+	lightVector = normalize(lightVector);
+	float attenuation = attVals.x + attVals.y * distance + attVals.z * distance * distance;
+
+	float dot1 = dot(lightVector, normal);
+	float diffuseLight = max(dot1, 0.0f);
+	diffuseLight = diffuseLight / attenuation;
+
+	vec3 eyeVector = normalize(eyePosition - _position);
+	vec3 reflectedVector = reflect(-lightVector, normal);
+	float dot2 = dot(reflectedVector, eyeVector);
+	dot2 = pow(dot2, 100);
+	float specularity = max(dot2, 0.0f);
+	specularity = specularity / attenuation;
+
+	// Needs to be a vector?
+	vec4 av = vec4(ambientLightFactor, ambientLightFactor, ambientLightFactor, 1);
+	vec4 dv = vec4(diffuseLight, diffuseLight, diffuseLight, 1);
+	vec4 sv = vec4(specularity, specularity, specularity, 1);
+
+	float totalLight = diffuseLight;
+	float brightness = clamp(totalLight, 0.0f, 1.0f);
+
+	// Which light model to use ?
+	// Thinmatrix's
+	//color = dv * c + sv; 
+	// Thinmatric's with ambient light
+	//color = (av + dv) * c + sv; 
+	// No color, just lighting
+	color = (av + dv + sv);
+	// Difference seems to be Thinmatrix's light is white and Jamie's is the color of the surface
+	//color = (av + dv + sv) * c;
+}

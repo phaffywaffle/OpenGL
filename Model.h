@@ -5,17 +5,14 @@
 class
 Model
 {
-public:
+private:
 	GLuint vao, vbo, uvbo, nbo, ibo;
-	real32* verts;
-	uint32 num_verts;
-	real32* uvs;
-	real32* normals;
-	GLushort* indices;
-	uint32 num_indices;
-	Model();
-	~Model();
+	std::vector<glm::vec3> verts;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> normals;
+public:
+	Model(char*);
 	void bind();
 	void unbind();
-	void processLine(std::string);
+	uint32 vertCount();
 };

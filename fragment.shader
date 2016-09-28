@@ -3,7 +3,7 @@
 #version 330 core
 
 in vec3 _position;
-in vec3 _color;
+in vec2 _uv;
 in vec3 _normal;
 
 uniform float shadeNormals = 0.0f;
@@ -19,7 +19,7 @@ out vec4 color;
 
 void main()
 {
-	vec4 c = vec4(_color, 1);
+	vec4 c = vec4(_uv.x, _uv.y, 0, 1);
 	vec3 normal = normalize(_normal);
 	vec3 lightVector = lightPosition - _position;
 	float distance = length(lightVector);

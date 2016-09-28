@@ -1,133 +1,122 @@
 #include "Model.h"
 
-// Make this a union for vector. Or just use glm::vec3
-struct Vertex {	real32 x; real32 y; real32 z; };
-
-// fix this later
-internal std::vector<Vertex> vertices_vector;
-internal std::vector<Vertex> normals_vector;
-// Remember Vector.z is garbage here
-internal std::vector<Vertex> uv_vector;
-internal std::vector<uint32> indices_vector;
-internal std::vector<Vertex> faces_vector;
-internal std::string garbagestring;
-internal char garbagechar;
-
-// Fucked for uvs
-internal bool
-checkEqual(Vertex v1, Vertex v2)
+Model::Model(char* filepath)
 {
-	return(v1.x == v2.x && v1.y == v2.y && v1.z == v2.z);
-}
-
-Model::Model()
-{
-	std::ifstream is("cube.obj");
+	std::ifstream is(filepath);
 	if (is.bad()) { print("Error opening obj file"); pause(); exit(-1); }
 
-	num_verts = 0;
-	num_indices = 0;
+	std::string garbagestring;
+	char garbagechar;
+
+	std::vector<glm::vec3> tempVerts;
+	std::vector<glm::vec2> tempUVS;
+	std::vector<glm::vec3> tempNormals;
+
+	std::vector<uint32> vertIndices;
+	std::vector<uint32> uvIndices;
+	std::vector<uint32> normalIndices;
+
 	std::string line;
 	while (std::getline(is, line))
 	{
 		std::istringstream iss(line);
 		if (line[0] == 'v' && line[1] == ' ')
 		{
-			Vertex vertex;
+			glm::vec3 vertex;
 			iss >> garbagestring >> vertex.x >> vertex.y >> vertex.z;
-			vertices_vector.push_back(vertex);
+			tempVerts.push_back(vertex);
 		}
 		if (line[0] == 'v' && line[1] == 'n')
 		{
-			Vertex normal;
+			glm::vec3 normal;
 			iss >> garbagestring >> normal.x >> normal.y >> normal.z;
-			normals_vector.push_back(normal);
+			tempNormals.push_back(normal);
 		}
 		if (line[0] == 'v' && line[1] == 't')
 		{
-			Vertex uv;
+			glm::vec2 uv;
 			iss >> garbagestring >> uv.x >> uv.y;
-			uv_vector.push_back(uv);
+			tempUVS.push_back(uv);
 		}
 		if (line[0] == 'f')
 		{
-			uint32 numbers[3*3];
-			iss >> garbagechar >> numbers[0] >> garbagechar >> numbers[1] >> garbagechar >> numbers[2] >> numbers[3] >> garbagechar >> numbers[4] >> garbagechar >> numbers[5] >> numbers[6] >> garbagechar >> numbers[7] >> garbagechar >> numbers[8];
-			// not dealing with ints properly
-			Vertex v1 = {numbers[0], numbers[1], numbers[2]};
-			Vertex v2 = {numbers[3], numbers[4], numbers[5]};
-			Vertex v3 = {numbers[6], numbers[7], numbers[8]};
+			uint32 vertIndex[3];
+			uint32 uvIndex[3];
+			uint32 normalIndex[3];
+			iss >> garbagechar >> vertIndex[0] >> garbagechar >> uvIndex[0] >> garbagechar >> normalIndex[0] 
+							   >> vertIndex[1] >> garbagechar >> uvIndex[1] >> garbagechar >> normalIndex[1] 
+							   >> vertIndex[2] >> garbagechar >> uvIndex[2] >> garbagechar >> normalIndex[2];
+			
+			vertIndices.push_back(vertIndex[0]);
+			vertIndices.push_back(vertIndex[1]);
+			vertIndices.push_back(vertIndex[2]);
 
-			faces_vector.push_back(v1);
-			faces_vector.push_back(v2);
-			faces_vector.push_back(v3);
+			uvIndices.push_back(uvIndex[0]);
+			uvIndices.push_back(uvIndex[1]);
+			uvIndices.push_back(uvIndex[2]);
+			
+			normalIndices.push_back(normalIndex[0]);
+			normalIndices.push_back(normalIndex[1]);
+			normalIndices.push_back(normalIndex[2]);
 		}
 	}
 
-	for(int i = 0; i < faces_vector.size(); i++)
+	for(int i = 0; i < vertIndices.size(); i++)
 	{
-		bool isNew = true;
-		Vertex test = faces_vector.at(i);
-		for(int j = 0; j < i; j++)
-		{
-			Vertex v = faces_vector.at(j);
-			if(checkEqual(test, v))
-			{
-				isNew = false;
-			}
-		}
-		if(isNew) num_verts++;
+		uint32 vertexIndex = vertIndices.at(i);
+		glm::vec3 vertex = tempVerts.at(vertexIndex - 1);
+		verts.push_back(vertex);
+
+		uint32 uvIndex = uvIndices.at(i);
+		glm::vec2 uv = tempUVS.at(uvIndex - 1);
+		uvs.push_back(uv);
+
+		uint32 normalIndex = normalIndices.at(i);
+		glm::vec3 normal = tempNormals.at(normalIndex - 1);
+		normals.push_back(normal);
 	}
-
-	verts = new real32[num_verts * FLOATS_PER_VERTEX];
-	uvs = new real32[num_verts * FLOATS_PER_UV];
-	normals = new real32[num_verts * FLOATS_PER_NORMAL];
-
+	
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &uvbo);
 	glGenBuffers(1, &nbo);
+	// Not necessary right now
 	glGenBuffers(1, &ibo);
 
-	glBindVertexArray(vao);
+	bind();
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, num_verts * FLOATS_PER_VERTEX * sizeof(real32), verts, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);	
+	glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(glm::vec3), &verts[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, FLOATS_PER_VERTEX * sizeof(real32), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, uvbo);
-	glBufferData(GL_ARRAY_BUFFER, num_verts * FLOATS_PER_UV * sizeof(real32), uvs, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, FLOATS_PER_UV * sizeof(real32), 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, nbo);
-	glBufferData(GL_ARRAY_BUFFER, num_verts * FLOATS_PER_NORMAL * sizeof(real32), normals, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, FLOATS_PER_NORMAL * sizeof(real32), 0);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GLushort), indices, GL_STATIC_DRAW);//
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	unbind();
 }
-// Check to see if I need to bind the vbo or just the vao here
-void Model::bind()
+
+void 
+Model::bind()
 {
 	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 }
 
-void Model::unbind()
+void 
+Model::unbind()
 {
 	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Model::~Model()
+uint32 
+Model::vertCount()
 {
-	delete[] verts;
-	delete[] indices;
+	return(verts.size());
 }

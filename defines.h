@@ -12,6 +12,7 @@
 #include <iostream>
 #include <GLM\glm.hpp>
 #include <GLM\gtx\transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #define internal static
 #define global static
@@ -20,16 +21,25 @@
 #define pause() system("PAUSE")
 #define NUM_ARRAY_ELEMENTS(x) sizeof(x) / sizeof(*x)
 
-#define WIDTH 1028
-#define HEIGHT 720
+#define WINDOW_WIDTH 1028
+#define WINDOW_HEIGHT 720
 #define BACKGROUND_COLOR 0x01234567
+
+#define FOV 1.047197f
+#define ASPECT_RATIO ((real32)WINDOW_WIDTH / (real32)WINDOW_HEIGHT)
+#define NEAR_PLANE 0.1f
+#define FAR_PLANE 100.0f
 
 #define PI 3.141592f
 
 #define MAX_MOUSE_DELTA_X 520
 #define MAX_MOUSE_DELTA_Y 520
-#define MOUSE_SMOOTHING_X 400
-#define MOUSE_SMOOTHING_Y 400
+#define MOUSE_SMOOTHING_X 300
+#define MOUSE_SMOOTHING_Y 300
+#define MOUSE_X_INVERTED -1
+#define MOUSE_X_NOT_INVERTED 1
+#define MOUSE_Y_INVERTED -1
+#define MOUSE_Y_NOT_INVERTED 1
 
 #define MOVE_SPEED 0.25f
 
@@ -39,6 +49,12 @@
 #define FLOATS_PER_VERTEX 3
 #define FLOATS_PER_UV 2
 #define FLOATS_PER_NORMAL 3
+
+#define X_AXIS glm::vec3(1.0f,0.0f,0.0f)
+#define Y_AXIS glm::vec3(0.0f,1.0f,0.0f)
+#define Z_AXIS glm::vec3(0.0f,0.0f,1.0f)
+
+#define ZERO_ROTATION 0.0f // fix this (?)
 
 typedef int8_t int8;
 typedef int16_t int16;
