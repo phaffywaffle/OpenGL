@@ -1,15 +1,18 @@
 #version 330 core
 
-in vec3 _position;
+in vec3 _worldposition;
+in vec3 _viewposition;
 in vec2 _uv;
 in vec3 _normal;
 
-const vec3 attVals = vec3(1.0f, 0.1f, 0.01f);
+const vec3 attVals = vec3(0.8f, 0.05f, 0.005f);
 
 uniform float ambientLightFactor;
 
 uniform vec3 lightPosition;
 uniform vec3 eyePosition;
+
+uniform sampler2D sample;
 
 out vec4 color;
 
@@ -17,7 +20,7 @@ void main()
 {
 	vec4 c = vec4(1, 1, 1, 1);
 	vec3 normal = normalize(_normal);
-	vec3 lightVector = lightPosition - _position;
+	vec3 lightVector = lightPosition - _worldposition;
 	float distance = length(lightVector);
 	lightVector = normalize(lightVector);
 	float attenuation = attVals.x + attVals.y * distance + attVals.z * distance * distance;
@@ -26,7 +29,7 @@ void main()
 	float diffuseLight = max(dot1, 0.0f);
 	diffuseLight = diffuseLight / attenuation;
 
-	vec3 eyeVector = normalize(eyePosition - _position);
+	vec3 eyeVector = normalize(eyePosition - _worldposition);
 	vec3 reflectedVector = reflect(-lightVector, normal);
 	float dot2 = dot(reflectedVector, eyeVector);
 	dot2 = pow(dot2, 100);
@@ -47,7 +50,9 @@ void main()
 	// Thinmatric's with ambient light
 	//color = (av + dv) * c + sv; 
 	// No color, just lighting
-	color = (av + dv + sv);
+	//color = (av + dv + sv);
 	// Difference seems to be Thinmatrix's light is white and Jamie's is the color of the surface
-	//color = (av + dv + sv) * c;
+	
+
+	color = (av + dv + sv) * texture(sample, _uv);
 }

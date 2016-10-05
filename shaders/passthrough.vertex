@@ -10,17 +10,18 @@ uniform mat4 tr_matrix;
 uniform mat4 rt_matrix;
 uniform mat4 sc_matrix;
 
-out vec3 _position;
+out vec3 _worldposition;
+out vec3 _viewposition;
 out vec2 _uv;
 out vec3 _normal;
 
 void main()
 {
-
 	mat4 ml_matrix = tr_matrix * rt_matrix * sc_matrix;
 	gl_Position = pr_matrix * vw_matrix * ml_matrix * vec4(position, 1);
 
-	_position = vec3(ml_matrix * vec4(position, 1));
+	_worldposition = vec3(ml_matrix * vec4(position, 1));
+	_viewposition = vec3(vw_matrix * ml_matrix * vec4(position, 1));
 	_uv = uv;
 	_normal = normalize(mat3(rt_matrix) * normal);
 }

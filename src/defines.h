@@ -8,7 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <memory.h>
+#include <map>
 #include <iostream>
 #include <GLM\glm.hpp>
 #include <GLM\gtx\transform.hpp>
@@ -42,6 +42,7 @@
 #define MOUSE_Y_NOT_INVERTED 1
 
 #define MOVE_SPEED 0.25f
+#define LAPTOP_MOVE_SPEED 0.007f
 
 #define GLSL_TRUE 1.0f
 #define GLSL_FALSE -1.0f

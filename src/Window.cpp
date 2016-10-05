@@ -123,7 +123,7 @@ Window::updateKeys(Camera* camera, Light* light)
 	keys[KEY_RIGHT] = glfwGetKey(window, GLFW_KEY_RIGHT);
 	keys[KEY_NUMPAD_0] = glfwGetKey(window, GLFW_KEY_KP_0);
 	keys[KEY_NUMPAD_1] = glfwGetKey(window, GLFW_KEY_KP_1);
-
+	keys[KEY_SPACE] = glfwGetKey(window, GLFW_KEY_SPACE);
 //#define SINGLE_PRESS
 #ifdef SINGLE_PRESS
 	// Input for single press
